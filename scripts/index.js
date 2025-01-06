@@ -17,32 +17,24 @@ function updateLocalStore(value) {
 
 function generateTodo(todo, parent = 'pending-todos') {
     const todos = document.getElementById(parent);
-
     const todoEle = document.createElement('div');
     todoEle.className = 'todo';
-
     const checkboxEle = document.createElement('input');
     checkboxEle.type = 'checkbox';
     checkboxEle.name = `complete-${todo.title}`;
     checkboxEle.id = `complete-${todo.title}`;
-    
-    // If the todo is already completed, check the checkbox
     if (parent === 'completed-todos') {
         checkboxEle.checked = true;
     }
-
     todoEle.appendChild(checkboxEle);
-
     const titleEle = document.createElement('span');
     titleEle.textContent = todo.title;
     todoEle.appendChild(titleEle);
-
     checkboxEle.onclick = function () {
-        const isChecked = checkboxEle.checked; // Check if the checkbox is checked
-        const isCompleted = parent === 'completed-todos'; // Determine if it's in completed list
+        const isChecked = checkboxEle.checked; 
+        const isCompleted = parent === 'completed-todos'; 
 
         if (isChecked && !isCompleted) {
-            // Move to completed
             const key = storeKey;
             const store = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
             const newStore = store.filter((item) => item.title !== todo.title);
@@ -56,7 +48,6 @@ function generateTodo(todo, parent = 'pending-todos') {
             generateTodo(todo, 'completed-todos');
             updateCompletedCount();
         } else if (!isChecked && isCompleted) {
-            // Move back to pending
             const completedStore = localStorage.getItem(completedStoreKey) ? JSON.parse(localStorage.getItem(completedStoreKey)) : [];
             const newCompletedStore = completedStore.filter((item) => item.title !== todo.title);
             localStorage.setItem(completedStoreKey, JSON.stringify(newCompletedStore));
