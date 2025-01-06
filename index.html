@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="root">
+        <h1>Groceries</h1>
+        <div class="todo-container">
+            <div id="todo-list">
+                <h4>Items to be Purchased</h4>
+                <div id="pending-todos"></div>
+                <div class="completed">
+                    <h4>Completed <span id="completed-count">0</span></h4>
+                    <div id="completed-todos"></div>
+                </div>
+            </div>
+            <div id="todo-form">
+                <h4>Add a Task</h4>
+                <form method="post" onsubmit="return handleSubmit(event)">
+                    <div class="form-group">
+                        <input name="title" placeholder="Task Title" />
+                    </div>
+                    <button>Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<div class="completed">
+    <h4 id="completed-heading">
+        Completed <span id="completed-count">0</span> 
+        <button id="toggle-completed" aria-expanded="false">▼</button>
+    </h4>
+    <div id="completed-todos" class="hidden"></div>
+</div>
+
+    <script src="./scripts/index.js"></script>
+</body>
+
+</html>
