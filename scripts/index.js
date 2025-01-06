@@ -25,6 +25,12 @@ function generateTodo(todo, parent = 'pending-todos') {
     checkboxEle.type = 'checkbox';
     checkboxEle.name = `complete-${todo.title}`;
     checkboxEle.id = `complete-${todo.title}`;
+    
+    // If the todo is already completed, check the checkbox
+    if (parent === 'completed-todos') {
+        checkboxEle.checked = true;
+    }
+
     todoEle.appendChild(checkboxEle);
 
     const titleEle = document.createElement('span');
@@ -32,22 +38,44 @@ function generateTodo(todo, parent = 'pending-todos') {
     todoEle.appendChild(titleEle);
 
     checkboxEle.onclick = function () {
-        const key = parent === 'pending-todos' ? storeKey : completedStoreKey;
-        const store = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
-        const newStore = store.filter((item) => item.title !== todo.title);
-        localStorage.setItem(key, JSON.stringify(newStore));
+        const isChecked = checkboxEle.checked; // Check if the checkbox is checked
+        const isCompleted = parent === 'completed-todos'; // Determine if it's in completed list
 
-        const completedTodoStore = localStorage.getItem(completedStoreKey) ? JSON.parse(localStorage.getItem(completedStoreKey)) : [];
-        completedTodoStore.push(todo);
-        localStorage.setItem(completedStoreKey, JSON.stringify(completedTodoStore));
+        if (isChecked && !isCompleted) {
+            // Move to completed
+            const key = storeKey;
+            const store = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
+            const newStore = store.filter((item) => item.title !== todo.title);
+            localStorage.setItem(key, JSON.stringify(newStore));
 
-        todoEle.remove();
-        generateTodo(todo, 'completed-todos');
+            const completedTodoStore = localStorage.getItem(completedStoreKey) ? JSON.parse(localStorage.getItem(completedStoreKey)) : [];
+            completedTodoStore.push(todo);
+            localStorage.setItem(completedStoreKey, JSON.stringify(completedTodoStore));
+
+            todoEle.remove();
+            generateTodo(todo, 'completed-todos');
+            updateCompletedCount();
+        } else if (!isChecked && isCompleted) {
+            // Move back to pending
+            const completedStore = localStorage.getItem(completedStoreKey) ? JSON.parse(localStorage.getItem(completedStoreKey)) : [];
+            const newCompletedStore = completedStore.filter((item) => item.title !== todo.title);
+            localStorage.setItem(completedStoreKey, JSON.stringify(newCompletedStore));
+
+            const store = localStorage.getItem(storeKey) ? JSON.parse(localStorage.getItem(storeKey)) : [];
+            store.push(todo);
+            localStorage.setItem(storeKey, JSON.stringify(store));
+
+            todoEle.remove();
+            generateTodo(todo, 'pending-todos');
+        }
+
         updateCompletedCount();
     };
 
     todos.insertBefore(todoEle, todos.firstChild);
 }
+
+
 
 function addTodo(todo) {
     generateTodo(todo);
