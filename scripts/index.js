@@ -47,7 +47,7 @@ function generateTodo(todo, parent = 'pending-todos') {
             todoEle.remove();
             generateTodo(todo, 'completed-todos');
             updateCompletedCount();
-        } else if ( isCompleted) {
+        } else {
             const completedStore = localStorage.getItem(completedStoreKey) ? JSON.parse(localStorage.getItem(completedStoreKey)) : [];
             const newCompletedStore = completedStore.filter((item) => item.title !== todo.title);
             localStorage.setItem(completedStoreKey, JSON.stringify(newCompletedStore));
