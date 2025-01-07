@@ -34,7 +34,7 @@ function generateTodo(todo, parent = 'pending-todos') {
         const isChecked = checkboxEle.checked; 
         const isCompleted = parent === 'completed-todos'; 
 
-        if (isChecked && !isCompleted) {
+        if (!isCompleted) {
             const key = storeKey;
             const store = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
             const newStore = store.filter((item) => item.title !== todo.title);
@@ -47,7 +47,7 @@ function generateTodo(todo, parent = 'pending-todos') {
             todoEle.remove();
             generateTodo(todo, 'completed-todos');
             updateCompletedCount();
-        } else if (!isChecked && isCompleted) {
+        } else if ( isCompleted) {
             const completedStore = localStorage.getItem(completedStoreKey) ? JSON.parse(localStorage.getItem(completedStoreKey)) : [];
             const newCompletedStore = completedStore.filter((item) => item.title !== todo.title);
             localStorage.setItem(completedStoreKey, JSON.stringify(newCompletedStore));
